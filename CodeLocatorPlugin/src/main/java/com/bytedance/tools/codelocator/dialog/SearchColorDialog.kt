@@ -17,8 +17,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ex.WindowManagerEx
 import com.intellij.ui.LightweightHint
 import com.intellij.ui.awt.RelativePoint
-import org.jetbrains.kotlin.idea.util.onTextChange
-import sun.font.FontDesignMetrics
+import org.jetbrains.kotlin.idea.core.util.onTextChange
 import java.awt.Dimension
 import java.awt.FontMetrics
 import java.awt.event.ActionListener
@@ -172,7 +171,7 @@ class SearchColorDialog(
         lineWidthRemain[line] = resultPanelBox.width
         result.forEachIndexed { index, result ->
             val makeJLabel = makeJLabel(result)
-            val stringWidth = FontDesignMetrics.getMetrics(makeJLabel.font).stringWidth(result)
+            val stringWidth = makeJLabel.getFontMetrics(makeJLabel.font).stringWidth(result)
             if (stringWidth >= resultPanelBox.width) {
                 val createHorizontalBox = Box.createHorizontalBox()
                 createHorizontalBox.add(makeJLabel)
