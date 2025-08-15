@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(./gradlew:*)",
+      "Bash(java:*)",
+      "Bash(sdk list java)",
+      "Bash(source:*)",
+      "Bash(sdk use:*)"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  }
+}

@@ -22,7 +22,7 @@ abstract class OSHelper {
 
     companion object {
 
-        private val sIsWindows = System.getProperty("os.name").toLowerCase().indexOf("windows") > -1
+        private val sIsWindows = System.getProperty("os.name").lowercase().indexOf("windows") > -1
 
         @JvmStatic
         val instance: OSHelper = if (sIsWindows) WindowsHelper() else MacHelper()

@@ -76,7 +76,7 @@ class FindClickListenerAction(
             }
         } else {
             val point = Point(0, 25)
-            pop.show(RelativePoint(e.inputEvent.component, point))
+            pop.show(RelativePoint(e.inputEvent?.component ?: return, point))
         }
     }
 

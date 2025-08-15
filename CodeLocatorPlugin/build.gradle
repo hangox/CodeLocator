@@ -4,6 +4,19 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.21'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '17'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '17'
+}
+
 group 'com.bytedance.tools'
 
 version '2.0.4'
@@ -50,7 +63,7 @@ dependencies {
 
 intellij {
 //    updateSinceUntilBuild false
-    version = "2022.2"
+    version = "2023.2"
     type = "IC"
     plugins = ["org.jetbrains.kotlin", "org.jetbrains.android", "com.intellij.java"]
 }
@@ -63,7 +76,7 @@ boolean isWindows() {
 
 tasks{
     patchPluginXml {
-        sinceBuild = "222"
+        sinceBuild = "232"
         untilBuild = "999.*"
     }
 }

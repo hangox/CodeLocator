@@ -1,6 +1,6 @@
 package com.bytedance.tools.codelocator.parser;
 
-import com.android.layoutinspector.parser.ViewNodeV2Parser
+// import com.android.layoutinspector.parser.ViewNodeV2Parser
 import com.bytedance.tools.codelocator.utils.Log
 import com.bytedance.tools.codelocator.utils.ReflectUtils
 import java.awt.Point
@@ -10,8 +10,12 @@ class CodeLocatorViewNodeParser {
 
     var preKeyIndex: Short = -1
 
-    fun parseWindowInfo(data: ByteArray, parser: ViewNodeV2Parser): Pair<Point, Int> {
-        val tableField = ReflectUtils.getClassField(ViewNodeV2Parser::class.java, "ids")
+    fun parseWindowInfo(data: ByteArray, parser: Any): Pair<Point, Int> {
+        // TODO: This method needs to be updated for new IntelliJ Platform API
+        // val tableField = ReflectUtils.getClassField(ViewNodeV2Parser::class.java, "ids")
+        return Pair(Point(0, 0), 0)
+        /*
+        val tableField = ReflectUtils.getClassField(parser::class.java, "ids")
         val table: Map<String, Any> = tableField.get(parser) as Map<String, Any>
         var windowXIndex: Short = 1
         var windowYIndex: Short = 2
@@ -50,11 +54,15 @@ class CodeLocatorViewNodeParser {
             }
         }
         return Pair(Point(0, 0), windowType)
+        */
     }
 
-    private fun getWindowType(parser: ViewNodeV2Parser, table: Map<String, Any>): Int {
+    private fun getWindowType(parser: Any, table: Map<String, Any>): Int {
+        // TODO: This method needs to be updated for new IntelliJ Platform API
+        return 0
+        /*
         try {
-            val viewField = ReflectUtils.getClassField(ViewNodeV2Parser::class.java, "mViews")
+            val viewField = ReflectUtils.getClassField(parser::class.java, "mViews")
             val mViews: MutableList<Map<Short, Any>> = viewField.get(parser) as MutableList<Map<Short, Any>>
             val paramsIndex = table.get("layoutParams") as Short
             val typeIndex = table.get("type") as Short
@@ -64,6 +72,7 @@ class CodeLocatorViewNodeParser {
             Log.e("getWindowType error", t)
         }
         return 0
+        */
     }
 
 }

@@ -39,7 +39,7 @@ class AddExtraFieldAction(
                     }
                     val split = inputString.split(";")
                     for (s in split) {
-                        if (!s.trim().toLowerCase().startsWith("m:") && !s.trim().toLowerCase().startsWith("f:")) {
+                        if (!s.trim().lowercase().startsWith("m:") && !s.trim().lowercase().startsWith("f:")) {
                             NotificationUtils.showNotifyInfoShort(
                                 project,
                                 ResUtils.getString("illegal_content", s),

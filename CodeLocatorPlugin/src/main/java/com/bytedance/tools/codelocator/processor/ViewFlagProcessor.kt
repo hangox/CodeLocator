@@ -76,7 +76,7 @@ class ViewFlagProcessor(project: Project, type: String, view: WView) : ViewValue
     }
 
     private fun createEditVisibilityModel(newValue: String): EditModel {
-        val visibility = when (newValue.toUpperCase()) {
+        val visibility = when (newValue.uppercase()) {
             "VISIBLE", "V" -> EditFlagModel.VISIBLE
             "INVISIBLE", "I" -> EditFlagModel.INVISIBLE
             else -> EditFlagModel.GONE
@@ -85,7 +85,7 @@ class ViewFlagProcessor(project: Project, type: String, view: WView) : ViewValue
     }
 
     private fun createEditEnableModel(newValue: String): EditModel {
-        val enable = when (newValue.toUpperCase()) {
+        val enable = when (newValue.uppercase()) {
             "TRUE", "1" -> EditFlagModel.ENABLE_MASK
             else -> 0
         }
@@ -93,7 +93,7 @@ class ViewFlagProcessor(project: Project, type: String, view: WView) : ViewValue
     }
 
     private fun createEditClickableModel(newValue: String): EditModel {
-        val clickable = when (newValue.toUpperCase()) {
+        val clickable = when (newValue.uppercase()) {
             "TRUE", "1" -> EditFlagModel.CLICKABLE_MASK
             else -> 0
         }

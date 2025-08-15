@@ -418,13 +418,13 @@ class AddSourceCodeAction(
     override fun isEnable(e: AnActionEvent) = true
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (isUpdate && e.inputEvent.isControlDown) {
+        if (isUpdate && e.inputEvent?.isControlDown == true) {
             Mob.mob(Mob.Action.RIGHT_CLICK, Mob.Button.SOURCE_CODE)
 
             ShowDownloadSourceDialog(codeLocatorWindow, project).show()
             return
         }
-        if (isUpdate && e.inputEvent.isShiftDown) {
+        if (isUpdate && e.inputEvent?.isShiftDown == true) {
             Mob.mob(Mob.Action.RIGHT_CLICK, Mob.Button.SOURCE_CODE)
             val fileContent =
                 FileUtils.getFileContent("${FileUtils.sCodeLocatorMainDirPath}${File.separator}dependencies.txt")

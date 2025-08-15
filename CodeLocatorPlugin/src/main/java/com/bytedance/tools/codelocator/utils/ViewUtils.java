@@ -4,7 +4,7 @@ import com.bytedance.tools.codelocator.model.WActivity;
 import com.bytedance.tools.codelocator.model.WView;
 import com.bytedance.tools.codelocator.panels.ScreenPanel;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ViewUtils {

@@ -1,11 +1,12 @@
 package com.bytedance.tools.codelocator.utils;
 
 import com.android.ddmlib.Client;
-import com.android.layoutinspector.LayoutInspectorCaptureOptions;
-import com.android.layoutinspector.ProtocolVersion;
-import com.android.layoutinspector.model.ClientWindow;
-import com.android.layoutinspector.model.ViewNode;
-import com.android.layoutinspector.parser.ViewNodeV2Parser;
+// Layout inspector imports temporarily commented out for compilation
+// import com.android.layoutinspector.LayoutInspectorCaptureOptions;
+// import com.android.layoutinspector.ProtocolVersion;
+// import com.android.layoutinspector.model.ClientWindow;
+// import com.android.layoutinspector.model.ViewNode;
+// import com.android.layoutinspector.parser.ViewNodeV2Parser;
 import com.bytedance.tools.codelocator.device.DeviceManager;
 import com.bytedance.tools.codelocator.device.action.AdbAction;
 import com.bytedance.tools.codelocator.device.action.AdbCommand;
@@ -306,6 +307,10 @@ public class DataUtils {
     public static final int GONE = 0x00000008;
 
     public static WApplication buildApplicationForNoSDKDebug(Project project, String pkgName, String activityName, Client client) {
+        // TODO: This method uses layoutinspector APIs that are not available in current platform version
+        // Temporarily returning null until alternative implementation is found
+        return null;
+        /*
         try {
             List<ClientWindow> allWindows = null;
             WApplication wApplication = new WApplication();
@@ -361,6 +366,7 @@ public class DataUtils {
             Log.d("buildApplicationForNoSDKDebug error", t);
             return null;
         }
+        */
     }
 
     public static WApplication buildApplicationForNoSDKRelease(Project project, String pkgName, String activityName) {
@@ -406,7 +412,11 @@ public class DataUtils {
         return null;
     }
 
-    public static WView convertToWView(ViewNode node) {
+    public static WView convertToWView(Object node) {
+        // TODO: This method uses ViewNode API that is not available in current platform version
+        // Temporarily returning null until alternative implementation is found
+        return null;
+        /*
         if (node == null) {
             return null;
         }
@@ -486,6 +496,7 @@ public class DataUtils {
             view.setChildren(child);
         }
         return view;
+        */
     }
 
     public static int getTotalViewCount(WView view) {

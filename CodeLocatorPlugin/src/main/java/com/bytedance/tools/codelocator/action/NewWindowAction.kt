@@ -59,7 +59,7 @@ class NewWindowAction(
             false
         )
         val point = Point(0, 25)
-        pop.show(RelativePoint(e.inputEvent.component, point))
+        pop.show(RelativePoint(e.inputEvent?.component ?: return, point))
     }
 
     private fun openNewWindow(isLinkMode: Boolean = false, isDiffMode: Boolean = false) {

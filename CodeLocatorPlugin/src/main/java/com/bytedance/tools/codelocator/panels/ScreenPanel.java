@@ -25,7 +25,7 @@ import com.intellij.util.ui.UIUtil;
 import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

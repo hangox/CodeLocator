@@ -37,7 +37,7 @@ class InstallApkAction : BaseAction(
 
         Mob.mob(Mob.Action.CLICK, Mob.Button.INSTALL_APK_BTN)
 
-        if (e.inputEvent.isControlDown) {
+        if (e.inputEvent?.isControlDown == true) {
             val findPossibleApkFile = findPossibleApkFile(project)
             if (findPossibleApkFile != null) {
                 ClipboardUtils.copyContentToClipboard(project, findPossibleApkFile!!.absolutePath)
