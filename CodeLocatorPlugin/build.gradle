@@ -1,3 +1,6 @@
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '2.1.0'
@@ -22,6 +25,8 @@ def myVersion = '2.0.5'
 def mySinceBuild = "232"
 def myUntilBuild = "252.*"
 
+version = myVersion
+
 
 boolean useSourceCode = false
 
@@ -40,23 +45,17 @@ repositories {
 intellijPlatform {
 //    pluginVerification {
 //        ides {
-//            recommended()
-//            select {
-//                types = listOf(
-//                        IntelliJPlatformType.AndroidStudio,
-//                        IntelliJPlatformType.IntellijIdeaUltimate,
-//                        IntelliJPlatformType.IntellijIdeaCommunity
-//                )
-//                channels = listOf(ProductRelease.Channel.RELEASE)
-//                sinceBuild = mySinceBuild
-//                untilBuild = myUntilBuild
-//            }
+//            // 通过指定具体版本来控制验证的 IDE
+////            ide(IntelliJPlatformType.IntellijIdeaCommunity)
+//            ide(IntelliJPlatformType.AndroidStudio, "2023.2.1.25")
 //        }
+//        freeArgs = ["--mute", "TemplateWordInPluginName"]
 //    }
 
     pluginConfiguration {
         name = "CodeLocator"
         group = myGroup
+        version = myVersion
         ideaVersion {
             sinceBuild = mySinceBuild
             untilBuild = myUntilBuild
@@ -65,16 +64,11 @@ intellijPlatform {
         changeNotes = project.file("changeNotes.txt").text
     }
 
-
     publishing {
         token = System.getenv("JETBRAINS_PUBLISH_TOKEN")
-//        channels = listOf("beta")
-
     }
 
-    buildSearchableOptions.set(false)
-
-
+    buildSearchableOptions = false
 }
 
 
