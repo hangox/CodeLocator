@@ -138,5 +138,5 @@ class SearchInWebAction : AnAction() {
         return arrayOf("java", "kt", "xml").firstOrNull { url.endsWith(it) }
     }
 
-    private fun isCodeFile(url: String) = url.toLowerCase().endsWith("java") || url.toLowerCase().endsWith("kt")
+    private fun isCodeFile(url: String) = url.lowercase().endsWith("java") || url.lowercase().endsWith("kt")
 }

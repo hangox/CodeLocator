@@ -5,7 +5,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
-import org.jetbrains.kotlin.idea.inspections.KotlinUnusedImportInspection
 import org.jetbrains.kotlin.psi.KtFile
 
 object DeleteImportManager {
@@ -14,14 +13,14 @@ object DeleteImportManager {
 
     fun removeUnusedKotlinImports(currentFile: KtFile, project: Project) {
         WriteCommandAction.runWriteCommandAction(project) {
-            val importList = currentFile.importList
-            val analyzeRes = KotlinUnusedImportInspection.analyzeImports(currentFile)
-            val unusedImports = analyzeRes?.unusedImports ?: return@runWriteCommandAction
-            count++
-            importList?.imports?.forEach {
-                if (it in unusedImports) {
-                    it.delete()
-                }
+            try {
+                // Fallback approach using standard IntelliJ optimization
+                val processor = com.intellij.codeInsight.actions.OptimizeImportsProcessor(project, currentFile)
+                processor.run()
+                count++
+            } catch (e: Exception) {
+                // Log error or handle gracefully
+                println("Failed to optimize imports for file: ${currentFile.name}")
             }
         }
     }

@@ -65,10 +65,10 @@ abstract class OSHelper {
 
     open fun getAndroidSdkFile(): File? {
         try {
-            val androidSdkData = AndroidSdks.getInstance().androidSdkPathsFromExistingPlatforms
-            return androidSdkData.elementAtOrNull(0)
+            val androidSdkData = AndroidSdks.getInstance().tryToChooseAndroidSdk()
+            return androidSdkData?.location?.toFile()
         } catch (t: Throwable) {
-            Log.d("androidSdkPathsFromExistingPlatforms failed", t)
+            Log.d("tryToChooseAndroidSdk failed", t)
         }
         try {
             val androidSdkData = AndroidSdks.getInstance().tryToChooseAndroidSdk() ?: return null

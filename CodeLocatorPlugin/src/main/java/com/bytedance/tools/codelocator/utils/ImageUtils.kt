@@ -38,7 +38,7 @@ object ImageUtils {
             loadImageFileName = "$loadImageFileName.svg"
         }
         var findIcon = IconLoader.findIcon(path + loadImageFileName, ImageUtils::class.java.classLoader)
-        if (imageSize != null && findIcon is IconLoader.CachedImageIcon && findIcon.iconWidth != imageSize) {
+        if (imageSize != null && findIcon is ScalableIcon && findIcon.iconWidth != imageSize) {
             findIcon = findIcon.scale(imageSize * 1.0f / findIcon.iconWidth)
         } else if (imageSize != null && findIcon != null && findIcon is ScalableIcon && findIcon.iconWidth != imageSize) {
             findIcon = findIcon.scale(imageSize * 1.0f / findIcon.iconWidth)

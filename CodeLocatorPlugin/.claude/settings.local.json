@@ -7,9 +7,16 @@
       "Bash(sdk list java)",
       "Bash(source:*)",
       "Bash(sdk use:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(sed:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:kotlin.github.io)"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/Users/hangox/Applications/Android Studio.app/Contents"
+    ]
   }
 }

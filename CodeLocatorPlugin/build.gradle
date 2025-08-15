@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.17.4'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.21'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
+    id 'org.jetbrains.intellij.platform' version '2.6.0'
 }
 
 java {
@@ -17,35 +17,66 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = '17'
 }
 
-group 'com.bytedance.tools'
+def myGroup = 'com.bytedance.tools'
+def myVersion = '2.0.5'
+def mySinceBuild = "232"
+def myUntilBuild = "252.*"
 
-version '2.0.5'
-
-runIde {
-    jvmArgs '-Xmx10G'
-}
 
 boolean useSourceCode = false
 
 repositories {
-    mavenCentral()
-    google()
-    jcenter()
+    intellijPlatform {
+        defaultRepositories()
+    }
     if (getProperties("customMarvenUrl") != null) {
         maven { url getProperties("customMarvenUrl") }
     }
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-        jcenter()
-        if (getProperties("customMarvenUrl") != null) {
-            maven { url getProperties("customMarvenUrl") }
+
+
+
+intellijPlatform {
+//    pluginVerification {
+//        ides {
+//            recommended()
+//            select {
+//                types = listOf(
+//                        IntelliJPlatformType.AndroidStudio,
+//                        IntelliJPlatformType.IntellijIdeaUltimate,
+//                        IntelliJPlatformType.IntellijIdeaCommunity
+//                )
+//                channels = listOf(ProductRelease.Channel.RELEASE)
+//                sinceBuild = mySinceBuild
+//                untilBuild = myUntilBuild
+//            }
+//        }
+//    }
+
+    pluginConfiguration {
+        name = "CodeLocator"
+        group = myGroup
+        ideaVersion {
+            sinceBuild = mySinceBuild
+            untilBuild = myUntilBuild
         }
+
+        changeNotes = project.file("changeNotes.txt").text
     }
+
+
+    publishing {
+        token = System.getenv("JETBRAINS_PUBLISH_TOKEN")
+//        channels = listOf("beta")
+
+    }
+
+    buildSearchableOptions.set(false)
+
+
 }
+
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
@@ -59,13 +90,20 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:3.1.4"
     implementation "com.google.zxing:core:3.5.0"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-}
 
-intellij {
-//    updateSinceUntilBuild false
-    version = "2023.2"
-    type = "IC"
-    plugins = ["org.jetbrains.kotlin", "org.jetbrains.android", "com.intellij.java"]
+    intellijPlatform {
+        if (project.hasProperty("localIdeOverride")) {
+            local(property("localIdeOverride").toString())
+        } else {
+//            androidStudio("2024.1.2.13")
+//            androidStudio("2023.2.1.25")
+            androidStudio("2025.1.1.14")
+        }
+        bundledPlugins(["org.jetbrains.kotlin", "org.jetbrains.android", "com.intellij.java"])
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+    }
 }
 
 boolean isFirst = true
@@ -74,12 +112,7 @@ boolean isWindows() {
     return System.getProperty("os.name").toLowerCase().indexOf("windows") != -1
 }
 
-tasks{
-    patchPluginXml {
-        sinceBuild = "232"
-        untilBuild = "999.*"
-    }
-}
+
 
 gradle.taskGraph.beforeTask {
     if (isFirst && !isWindows()) {
@@ -128,7 +161,7 @@ gradle.taskGraph.beforeTask {
 }
 
 gradle.taskGraph.afterTask {
-    if ("prepareSandbox".equals((it as Task).getName())) {
+    if ("prepareSandbox".equals((it as Task).getName()) || "prepareIdeaSandbox".equals((it as Task).getName())) {
         copyFile(new File("imgcopy.m"), new File("build${File.separator}idea-sandbox${File.separator}plugins${File.separator}CodeLocatorPlugin${File.separator}imgcopy.m"))
         copyFile(new File("JarModuleTemplate.zip"), new File("build${File.separator}idea-sandbox${File.separator}plugins${File.separator}CodeLocatorPlugin${File.separator}JarModuleTemplate.zip"))
         copyFile(new File("AndroidModuleTemplate.zip"), new File("build${File.separator}idea-sandbox${File.separator}plugins${File.separator}CodeLocatorPlugin${File.separator}AndroidModuleTemplate.zip"))

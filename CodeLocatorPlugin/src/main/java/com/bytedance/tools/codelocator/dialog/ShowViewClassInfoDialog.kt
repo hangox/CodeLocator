@@ -67,7 +67,7 @@ class ShowViewClassInfoDialog(
             it.name
         })
         list.sortWith(Comparator { s, s2 ->
-            val lowerCompare = s.toLowerCase().compareTo(s2.toLowerCase())
+            val lowerCompare = s.lowercase().compareTo(s2.lowercase())
             if (lowerCompare >= 0) {
                 s.compareTo(s2)
             } else {

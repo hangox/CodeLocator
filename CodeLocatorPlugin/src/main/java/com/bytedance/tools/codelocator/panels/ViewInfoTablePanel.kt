@@ -366,7 +366,7 @@ class ViewInfoTablePanel(val codeLocatorWindow: CodeLocatorWindow) : JPanel() {
             map["enable"] = view?.isEnabled?.toString() ?: ""
             map["isFocused"] = view?.isFocused?.toString() ?: ""
             map["memAddr"] = if (view?.memAddr != null) {
-                view.memAddr.toLowerCase() + " (" + Integer.valueOf(view.memAddr, 16) + ")"
+                view.memAddr.lowercase() + " (" + Integer.valueOf(view.memAddr, 16) + ")"
             } else ""
             map["background"] = if (view?.backgroundColor?.startsWith(":") == true) {
                 view.backgroundColor.substring(":".length)

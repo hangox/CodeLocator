@@ -45,12 +45,12 @@ class LayoutProcessor(project: Project, view: WView) : ViewValueProcessor(projec
 
     override fun isValid(changeText: String): Boolean {
         val compile = Pattern.compile("\\s*([0-9]+|wrap_content|match_parent)\\s*((dp)|(px))?\\s*,\\s*([0-9]+|wrap_content|match_parent)\\s*((dp)|(px))?\\s*")
-        val matcher = compile.matcher(changeText.toLowerCase())
+        val matcher = compile.matcher(changeText.lowercase())
         return matcher.matches()
     }
 
     override fun getChangeModel(view: WView, changeString: String): EditModel? {
-        val toLowerCase = changeString.toLowerCase()
+        val toLowerCase = changeString.lowercase()
                 .replace("wrap_content", "-2")
                 .replace("match_parent", "-1")
         val split = toLowerCase.split(",")

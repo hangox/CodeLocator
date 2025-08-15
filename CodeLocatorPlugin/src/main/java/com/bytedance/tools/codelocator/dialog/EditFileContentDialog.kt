@@ -116,13 +116,13 @@ class EditFileContentDialog(
         if (!searchText.isNullOrEmpty()) {
             val document = textArea.document
             val findLength = searchText.length
-            val searchTextLow = searchText.toLowerCase()
+            val searchTextLow = searchText.lowercase()
             var searchStart = pos
             try {
                 var findText = false
                 var loopCount = 0
                 while (searchStart <= document.length - findLength && searchStart >= 0) {
-                    val match = document.getText(searchStart, findLength).toLowerCase()
+                    val match = document.getText(searchStart, findLength).lowercase()
                     if (match == searchTextLow) {
                         findText = true
                         break
