@@ -144,11 +144,11 @@ class SearchColorDialog(
         }
         val colorInfos = CodeLocatorApplicationInitializedListener.getColorInfos()
         val darkColorStrs =
-            colorInfos.filter { (it.colorMode == "深色模式" || it.colorMode == "Dark Mode") && darkColors.contains(it.color) }
-                .map { it.colorName }.toSet()
+            colorInfos?.filter { (it.colorMode == "深色模式" || it.colorMode == "Dark Mode") && darkColors.contains(it.color) }
+                ?.map { it.colorName }?.toSet() ?: emptySet()
         val lightColorStrs =
-            colorInfos.filter { (it.colorMode == "浅色模式" || it.colorMode == "Light Mode") && lightColors.contains(it.color) }
-                .map { it.colorName }.toSet()
+            colorInfos?.filter { (it.colorMode == "浅色模式" || it.colorMode == "Light Mode") && lightColors.contains(it.color) }
+                ?.map { it.colorName }?.toSet() ?: emptySet()
         val resultSet = darkColorStrs intersect lightColorStrs
         Log.d("Search \ndark: " + darkColors.joinToString { it.toString(16) + " " + it } + "\nlight: " + lightColors.joinToString {
             it.toString(

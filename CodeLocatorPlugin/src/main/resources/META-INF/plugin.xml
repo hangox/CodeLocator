@@ -63,10 +63,8 @@
 
         <defaultProjectTypeProvider type="Android"/>
 
-        <applicationInitializedListener
-            implementation="com.bytedance.tools.codelocator.listener.CodeLocatorApplicationInitializedListener"/>
-
         <postStartupActivity implementation="com.bytedance.tools.codelocator.listener.CodeLocatorStartupActivity"/>
+        <postStartupActivity implementation="com.bytedance.tools.codelocator.listener.CodeLocatorApplicationInitializedListener"/>
 
         <toolWindow id="CodeLocator"
                     icon="/images/codeLocator.svg"

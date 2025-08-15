@@ -6,7 +6,8 @@
       "Bash(java:*)",
       "Bash(sdk list java)",
       "Bash(source:*)",
-      "Bash(sdk use:*)"
+      "Bash(sdk use:*)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
