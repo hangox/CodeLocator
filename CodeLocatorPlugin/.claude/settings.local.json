@@ -15,8 +15,6 @@
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "/Users/hangox/Applications/Android Studio.app/Contents"
-    ]
+    "additionalDirectories": []
   }
 }

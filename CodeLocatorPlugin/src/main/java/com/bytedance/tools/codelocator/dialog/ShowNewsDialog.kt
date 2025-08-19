@@ -32,14 +32,19 @@ class ShowNewsDialog(val project: Project, val msg: String, val version: String)
         }
 
         private fun logNeedShowDialog(version: String): Boolean {
-            val showDialogLogFile = File(
-                FileUtils.sCodeLocatorMainDirPath,
-                DIALOG_SHOW_LOG_FILE
-            )
-            if (!showDialogLogFile.exists()) {
-                showDialogLogFile.createNewFile()
-            }
             try {
+                val showDialogLogFile = File(
+                    FileUtils.sCodeLocatorMainDirPath,
+                    DIALOG_SHOW_LOG_FILE
+                )
+                if (!showDialogLogFile.exists()) {
+                    try {
+                        showDialogLogFile.createNewFile()
+                    } catch (e: Exception) {
+                        Log.e("Cannot create file on read-only filesystem", e)
+                        return true // 如果无法创建文件，默认显示对话框
+                    }
+                }
                 val fileContent = FileUtils.getFileContent(showDialogLogFile)
                 val splitLines = fileContent.split("\n")
                 var hasShowed = false
@@ -150,7 +155,12 @@ class ShowNewsDialog(val project: Project, val msg: String, val version: String)
                 DIALOG_SHOW_LOG_FILE
             )
             if (!showDialogLogFile.exists()) {
-                showDialogLogFile.createNewFile()
+                try {
+                    showDialogLogFile.createNewFile()
+                } catch (e: Exception) {
+                    Log.e("Cannot create file on read-only filesystem", e)
+                    return // 如果无法创建文件，直接返回，不进行写入操作
+                }
             }
             val writer = OutputStreamWriter(FileOutputStream(showDialogLogFile, true), FileUtils.CHARSET_NAME)
             val fileContent = FileUtils.getFileContent(showDialogLogFile)

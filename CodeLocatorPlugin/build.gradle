@@ -31,6 +31,7 @@ version = myVersion
 boolean useSourceCode = false
 
 repositories {
+    maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
     intellijPlatform {
         defaultRepositories()
     }
