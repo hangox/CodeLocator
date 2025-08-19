@@ -543,6 +543,11 @@ public class FileUtils {
         if (level >= 3 || !file.isDirectory() || file.getName().startsWith(".")) {
             return;
         }
+        final File newBuildPath = new File(file, "build" + File.separator + "intermediates" + File.separator + "apk");
+        if (newBuildPath.exists()) {
+            sets.add(newBuildPath.getAbsolutePath());
+            return;
+        }
         final File buildPath = new File(file, "build" + File.separator + "outputs" + File.separator + "apk");
         if (buildPath.exists()) {
             sets.add(buildPath.getAbsolutePath());
