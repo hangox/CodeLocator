@@ -3,6 +3,7 @@ package com.bytedance.tools.codelocator.action
 import com.bytedance.tools.codelocator.utils.Log
 import com.bytedance.tools.codelocator.utils.Mob
 import com.bytedance.tools.codelocator.utils.ResUtils
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
@@ -13,6 +14,10 @@ import java.io.File
 class InstallApkMenuAction : AnAction() {
 
     lateinit var project: Project
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
 
     override fun actionPerformed(e: AnActionEvent) {
         project = e.project!!
