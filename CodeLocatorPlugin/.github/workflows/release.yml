@@ -1,0 +1,81 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+          
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build plugin
+      run: ./gradlew buildPlugin
+      
+    - name: Get plugin version
+      id: plugin_version
+      run: |
+        VERSION=$(grep "def myVersion" build.gradle | sed "s/.*'\(.*\)'.*/\1/")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Plugin version: $VERSION"
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: plugin-build-${{ steps.plugin_version.outputs.version }}
+        path: build/distributions/*.zip
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.plugin_version.outputs.version }}-${{ github.run_number }}
+        name: CodeLocator Plugin v${{ steps.plugin_version.outputs.version }}-${{ github.run_number }}
+        body: |
+          ## CodeLocator Plugin Release
+          
+          ### Version: ${{ steps.plugin_version.outputs.version }}
+          ### Build: ${{ github.run_number }}
+          
+          **Changes in this release:**
+          - Auto-built from commit: ${{ github.sha }}
+          - Built on: ${{ github.event.head_commit.timestamp }}
+          
+          **Installation:**
+          1. Download the CodeLocator-${{ steps.plugin_version.outputs.version }}.zip file
+          2. In IntelliJ IDEA/Android Studio, go to Settings > Plugins
+          3. Click the gear icon and select "Install Plugin from Disk..."
+          4. Select the downloaded zip file
+          5. Restart the IDE
+          
+          **Requirements:**
+          - IntelliJ IDEA 2023.2+ or Android Studio
+          - Java 17+
+        files: |
+          build/distributions/*.zip
+        draft: false
+        prerelease: false
