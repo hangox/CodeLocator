@@ -10,6 +10,9 @@ buildscript {
     ext.useSupport = false
 
     repositories {
+        maven{
+            url = "https://nexus.cc-mobile.cn/repository/maven-public"
+        }
         mavenCentral()
         google()
         jcenter()
@@ -32,6 +35,9 @@ String getProperties(String key) {
 
 allprojects {
     repositories {
+        maven{
+            url = "https://nexus.cc-mobile.cn/repository/maven-public"
+        }
         mavenCentral()
         google()
         jcenter()

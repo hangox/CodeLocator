@@ -3,7 +3,7 @@ import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.3.0'
     id 'org.jetbrains.intellij.platform' version '2.6.0'
 }
 
@@ -21,9 +21,9 @@ compileTestKotlin {
 }
 
 def myGroup = 'com.bytedance.tools'
-def myVersion = '2.0.5'
+def myVersion = '2.0.7'
 def mySinceBuild = "232"
-def myUntilBuild = "252.*"
+def myUntilBuild = "263.*"
 
 version = myVersion
 

@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.bytedance.tools.codelocator</id>
-    <idea-version since-build="191.0"/>
+    <idea-version since-build="191.0" until-build="263.*"/>
     <name>CodeLocator</name>
     <vendor email="liujian.android@bytedance.com" url="https://github.com/bytedance/codelocator">liujian.android</vendor>
 

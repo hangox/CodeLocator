@@ -12,16 +12,15 @@ object DeleteImportManager {
     var count = 0
 
     fun removeUnusedKotlinImports(currentFile: KtFile, project: Project) {
-        WriteCommandAction.runWriteCommandAction(project) {
-            try {
-                // Fallback approach using standard IntelliJ optimization
-                val processor = com.intellij.codeInsight.actions.OptimizeImportsProcessor(project, currentFile)
-                processor.run()
-                count++
-            } catch (e: Exception) {
-                // Log error or handle gracefully
-                println("Failed to optimize imports for file: ${currentFile.name}")
-            }
+        try {
+            // OptimizeImportsProcessor 可能会显示 UI 对话框（例如请求解锁文件）
+            // 因此必须在 write action 外部执行，让它自己处理 write action
+            val processor = com.intellij.codeInsight.actions.OptimizeImportsProcessor(project, currentFile)
+            processor.run()
+            count++
+        } catch (e: Exception) {
+            // 记录错误或优雅处理
+            println("Failed to optimize imports for file: ${currentFile.name}")
         }
     }
 

@@ -59,7 +59,7 @@ class CodeLocatorViewNodeDecoder(private val mBuf: ByteBuffer) {
         constructor(
             seen: Byte,
             pos: Int
-        ) : super(String.format("Unexpected byte %c seen at position %d", seen.toChar(), pos))
+        ) : super(String.format("Unexpected byte %c seen at position %d", seen.toInt().toChar(), pos))
 
         constructor(msg: String) : super(msg)
     }

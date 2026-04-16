@@ -1,0 +1,48 @@
+plugins {
+    id 'base'
+}
+
+// 定义通用任务来管理所有子项目
+task buildAll {
+    group = 'build'
+    description = '构建所有子项目'
+    dependsOn gradle.includedBuilds*.task(':build')
+}
+
+task cleanAll {
+    group = 'build'
+    description = '清理所有子项目'
+    dependsOn gradle.includedBuilds*.task(':clean')
+}
+
+// 针对特定子项目的任务
+task buildApp {
+    group = 'build'
+    description = '构建 CodeLocatorApp 项目'
+    dependsOn gradle.includedBuild('CodeLocatorApp').task(':build')
+}
+
+task cleanApp {
+    group = 'build'
+    description = '清理 CodeLocatorApp 项目'
+    dependsOn gradle.includedBuild('CodeLocatorApp').task(':clean')
+}
+
+task buildPlugin {
+    group = 'build'
+    description = '构建 CodeLocatorPlugin 项目'
+    dependsOn gradle.includedBuild('CodeLocatorPlugin').task(':build')
+}
+
+task cleanPlugin {
+    group = 'build'
+    description = '清理 CodeLocatorPlugin 项目'
+    dependsOn gradle.includedBuild('CodeLocatorPlugin').task(':clean')
+}
+
+// 运行插件的任务
+task runPlugin {
+    group = 'application'
+    description = '运行 CodeLocatorPlugin'
+    dependsOn gradle.includedBuild('CodeLocatorPlugin').task(':runIde')
+}

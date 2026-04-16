@@ -1,0 +1,5 @@
+rootProject.name = 'CodeLocator'
+
+// 使用 includeBuild 连接两个平等的子项目
+includeBuild 'CodeLocatorApp'
+includeBuild 'CodeLocatorPlugin'

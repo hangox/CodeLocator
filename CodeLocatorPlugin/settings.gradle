@@ -1,5 +1,14 @@
 rootProject.name = 'CodeLocatorPlugin'
 
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
+        mavenCentral()
+        google()
+    }
+}
+
 include ':CodeLocatorModel'
 
 boolean isWindows() {
