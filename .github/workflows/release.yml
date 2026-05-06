@@ -1,0 +1,55 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Plugin
+        working-directory: CodeLocatorPlugin
+        run: ./gradlew buildPlugin
+
+      - name: Upload to Private Registry
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          ZIP_FILE="CodeLocatorPlugin/build/distributions/CodeLocatorPlugin-${VERSION}.zip"
+
+          if [ ! -f "$ZIP_FILE" ]; then
+            echo "Error: ZIP file not found: $ZIP_FILE"
+            exit 1
+          fi
+
+          echo "Uploading CodeLocator ${VERSION} to private registry..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.PLUGIN_REGISTRY_URL }}/api/plugins" \
+            -H "Authorization: Bearer ${{ secrets.PLUGIN_REGISTRY_TOKEN }}" \
+            -F "file=@${ZIP_FILE}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_CODE" -ne 201 ]; then
+            echo "Error: Upload failed with status $HTTP_CODE"
+            exit 1
+          fi
+
+          echo "Successfully uploaded CodeLocator ${VERSION}"
