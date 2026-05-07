@@ -50,6 +50,40 @@ jobs:
         name: plugin-build-${{ steps.plugin_version.outputs.version }}
         path: CodeLocatorPlugin/build/distributions/*.zip
 
+    - name: Upload to Private Plugin Registry
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        REGISTRY_URL: ${{ secrets.PLUGIN_REGISTRY_URL }}
+        REGISTRY_TOKEN: ${{ secrets.PLUGIN_REGISTRY_TOKEN }}
+        VERSION: ${{ steps.plugin_version.outputs.version }}
+      run: |
+        ZIP_FILE="CodeLocatorPlugin/build/distributions/CodeLocatorPlugin-${VERSION}.zip"
+
+        if [ ! -f "$ZIP_FILE" ]; then
+          echo "Error: ZIP file not found: $ZIP_FILE"
+          exit 1
+        fi
+
+        echo "Uploading plugin ${VERSION} to private registry..."
+        RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST \
+          "${REGISTRY_URL}/api/plugins?force=true" \
+          -H "Authorization: Bearer ${REGISTRY_TOKEN}" \
+          -F "file=@${ZIP_FILE}" \
+          --max-time 600 --retry 3 --retry-all-errors)
+
+        HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+        BODY=$(echo "$RESPONSE" | sed '$d')
+
+        echo "HTTP Status: $HTTP_CODE"
+        echo "Response: $BODY"
+
+        if [ "$HTTP_CODE" != "201" ] && [ "$HTTP_CODE" != "200" ]; then
+          echo "Error: Upload failed with status $HTTP_CODE"
+          exit 1
+        fi
+
+        echo "Successfully uploaded plugin ${VERSION} to private registry"
+
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2
