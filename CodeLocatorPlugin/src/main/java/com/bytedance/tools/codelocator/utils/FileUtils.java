@@ -89,7 +89,7 @@ public class FileUtils {
 
     public static String sLogFilePath;
 
-    public static void init() {
+    public static synchronized void init() {
         if (sLogFilePath != null) {
             return;
         }

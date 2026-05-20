@@ -12,7 +12,6 @@ import com.bytedance.tools.codelocator.utils.FileUtils;
 import com.bytedance.tools.codelocator.utils.Log;
 import com.bytedance.tools.codelocator.utils.MD5Utils;
 import com.bytedance.tools.codelocator.utils.Mob;
-import com.bytedance.tools.codelocator.utils.NetUtils;
 import com.bytedance.tools.codelocator.utils.ReflectUtils;
 import com.bytedance.tools.codelocator.utils.ThreadUtils;
 import com.google.common.util.concurrent.FutureCallback;
@@ -43,7 +42,6 @@ public class CodeLocatorStartupActivity implements StartupActivity {
     public void runActivity(@NotNull Project project) {
         Disposable tempDisposable = Disposer.newDisposable();
         subscribeNotification(project, tempDisposable);
-        NetUtils.fetchConfig();
         ThreadUtils.submit(() -> {
             initAdbBridgeWhenProjectOpen(project);
         });

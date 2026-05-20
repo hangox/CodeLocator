@@ -1,35 +1,24 @@
 package com.bytedance.tools.codelocator.listener
 
-import com.android.ddmlib.IDevice
-import com.bytedance.tools.codelocator.device.Device
-import com.bytedance.tools.codelocator.device.DeviceManager
 import com.bytedance.tools.codelocator.model.CodeLocatorUserConfig
 import com.bytedance.tools.codelocator.model.ColorInfo
 import com.bytedance.tools.codelocator.utils.*
 import com.google.gson.reflect.TypeToken
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.codeInsight.hint.HintManagerImpl
-import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
-import com.intellij.openapi.project.ProjectManagerListener
+import com.intellij.openapi.startup.StartupActivity
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.LightweightHint
 import com.intellij.ui.awt.RelativePoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.jetbrains.annotations.NotNull
 import java.awt.*
 import java.io.File
-import java.util.*
 import javax.swing.*
 import javax.swing.BorderFactory
 import javax.swing.Box
@@ -45,42 +34,28 @@ class CodeLocatorApplicationInitializedListener : StartupActivity {
     private var lastSelectText: String? = null
 
     override fun runActivity(project: Project) {
-        FileUtils.init()
-        initColorInfo()
         registerEditColorListener()
-
         ThreadUtils.submit {
-            NetUtils.fetchConfig()
-        }
-        
-        Disposer.register(ApplicationManager.getApplication(), disposable)
-        ApplicationManager.getApplication().messageBus.connect().subscribe(ProjectManager.TOPIC, object : ProjectManagerListener {
-            override fun projectClosed(project: Project) {
-                val currentDevice = DeviceManager.getCurrentDevice(project, true)
-                if (currentDevice?.device != null) {
-                    val serialNumber = currentDevice.device.serialNumber
-                    CodeLocatorUserConfig.loadConfig().lastDevice = serialNumber
-                    DeviceManager.onProjectClose(project)
-                } else if (currentDevice == null) {
-                    val device = DeviceManager.onProjectClose(project)
-                    if (device != null) {
-                        CodeLocatorUserConfig.loadConfig().lastDevice = device.serialNumber
-                    }
-                } else {
-                    DeviceManager.onProjectClose(project)
-                }
-                CodeLocatorUserConfig.updateConfig(CodeLocatorUserConfig.loadConfig())
+            try {
+                FileUtils.init()
+                initColorInfo()
+                NetUtils.fetchConfig()
+            } catch (t: Throwable) {
+                Log.e("CodeLocator 启动初始化失败", t)
             }
-        })
+        }
     }
 
     companion object {
         const val HINT_ITEM_HEIGHT = 24
         
+        @Volatile
         private var sColorInfo: List<ColorInfo>? = null
         private val mFindColorSets = HashSet<ColorInfo>()
         private var maxWidth: Int = 0
         private val disposable: Disposable = Disposer.newDisposable()
+        private var sColorListenerRegistered = false
+        private var sColorInfoLoaded = false
 
         @JvmStatic
         fun setColorInfo(colorInfo: List<ColorInfo>?) {
@@ -200,6 +175,13 @@ class CodeLocatorApplicationInitializedListener : StartupActivity {
     }
 
     private fun registerEditColorListener() {
+        synchronized(CodeLocatorApplicationInitializedListener::class.java) {
+            if (sColorListenerRegistered) {
+                return
+            }
+            sColorListenerRegistered = true
+        }
+        Disposer.register(ApplicationManager.getApplication(), disposable)
         EditorFactory.getInstance().eventMulticaster.addSelectionListener(object : SelectionListener {
             override fun selectionChanged(e: SelectionEvent) {
                 if (!CodeLocatorUserConfig.loadConfig().isPreviewColor) {
@@ -268,6 +250,12 @@ class CodeLocatorApplicationInitializedListener : StartupActivity {
     }
 
     private fun initColorInfo() {
+        synchronized(CodeLocatorApplicationInitializedListener::class.java) {
+            if (sColorInfoLoaded) {
+                return
+            }
+            sColorInfoLoaded = true
+        }
         val fileContent = FileUtils.getFileContent(File(FileUtils.sCodeLocatorMainDirPath, FileUtils.GRAPH_COLOR_DATA_FILE_NAME))
         if (fileContent.isNullOrEmpty()) {
             return

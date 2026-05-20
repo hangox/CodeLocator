@@ -13,6 +13,12 @@ import java.util.List;
 
 public class NetUtils {
 
+    private static final long CONFIG_FETCH_INTERVAL_MS = 30 * 60 * 1000L;
+
+    private static volatile long sLastFetchConfigSuccessTime = 0L;
+
+    private static volatile boolean sFetchingConfig = false;
+
     public static final String SEARCH_CODE_URL = "";
 
     public static final String FEEDBACK_URL = "mailto://liujian.android@bytedance.com";
@@ -79,6 +85,13 @@ public class NetUtils {
         if (NetUtils.SERVER_URL == null || NetUtils.SERVER_URL.isEmpty()) {
             return;
         }
+        final long now = System.currentTimeMillis();
+        synchronized (NetUtils.class) {
+            if (sFetchingConfig || now - sLastFetchConfigSuccessTime < CONFIG_FETCH_INTERVAL_MS) {
+                return;
+            }
+            sFetchingConfig = true;
+        }
         final Request request = new Request.Builder()
             .get()
             .url(StringUtils.appendArgToUrl(NetUtils.SERVER_URL, "type=config"))
@@ -86,14 +99,25 @@ public class NetUtils {
         sOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("Fecth config error", e);
+                synchronized (NetUtils.class) {
+                    sFetchingConfig = false;
+                }
+                Log.e("Fetch config error", e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 try {
-                    final String string = response.body().string();
-                    response.body().close();
+                    final ResponseBody responseBody = response.body();
+                    if (responseBody == null) {
+                        return;
+                    }
+                    final String string;
+                    try {
+                        string = responseBody.string();
+                    } finally {
+                        responseBody.close();
+                    }
                     final ProjectConfig projectConfig = GsonUtils.sGson.fromJson(string, ProjectConfig.class);
                     if (projectConfig != null) {
                         final List<AppConfig> appConfigs = projectConfig.getAppConfigs();
@@ -113,8 +137,14 @@ public class NetUtils {
                         CodeLocatorUserConfig.loadConfig().setMaxAsyncTryCount(projectConfig.getMaxAsyncTryCount());
                         CodeLocatorUserConfig.updateConfig(CodeLocatorUserConfig.loadConfig());
                     }
+                    FileUtils.init();
                     FileUtils.saveConfig(projectConfig);
                 } catch (Throwable t) {
+                } finally {
+                    synchronized (NetUtils.class) {
+                        sLastFetchConfigSuccessTime = System.currentTimeMillis();
+                        sFetchingConfig = false;
+                    }
                 }
             }
         });
