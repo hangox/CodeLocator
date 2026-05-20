@@ -448,6 +448,10 @@ public class CodeLocatorUserConfig {
         this.autoFormatCode = autoFormatCode;
     }
 
+    public boolean isEnglish() {
+        return this.res == "en";
+    }
+
     @NotNull
     public static CodeLocatorUserConfig loadConfig() {
         if (sCodeLocatorConfig != null) {

@@ -19,6 +19,8 @@ public class NetUtils {
 
     public static final String DOC_URL = "https://github.com/bytedance/CodeLocator/blob/main/how_to_use_codelocator_zh.md";
 
+    public static final String DOC_URL_EN = "https://github.com/bytedance/CodeLocator/blob/main/how_to_use_codelocator.md";
+
     public static final String SERVER_URL = "https://c76297c446.goho.co/log.php";
 
     public static final String FILE_SERVER_URL = "https://c76297c446.goho.co/upload.php";

@@ -1,6 +1,13 @@
 package com.bytedance.tools.codelocator.dialog
 
-import com.bytedance.tools.codelocator.utils.*
+import com.bytedance.tools.codelocator.utils.CoordinateUtils
+import com.bytedance.tools.codelocator.utils.FileUtils
+import com.bytedance.tools.codelocator.utils.Log
+import com.bytedance.tools.codelocator.utils.Mob
+import com.bytedance.tools.codelocator.utils.OSHelper
+import com.bytedance.tools.codelocator.utils.ResUtils
+import com.bytedance.tools.codelocator.utils.ThreadUtils
+import com.bytedance.tools.codelocator.utils.UIUtils
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ex.WindowManagerEx
 import java.awt.Dimension
@@ -8,7 +15,14 @@ import java.awt.Font
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
-import javax.swing.*
+import javax.swing.BorderFactory
+import javax.swing.Box
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JDialog
+import javax.swing.JLabel
+import javax.swing.JPanel
 
 class ShowNewsDialog(val project: Project, val msg: String, val version: String) :
     JDialog(WindowManagerEx.getInstance().getFrame(project), ModalityType.MODELESS) {
@@ -113,7 +127,7 @@ class ShowNewsDialog(val project: Project, val msg: String, val version: String)
             hide()
         }
         try {
-            val stringWidth = confirmBtn.getFontMetrics(confirmBtn.font).stringWidth(confrimText)
+            val stringWidth = UIUtils.getStringWidth(confirmBtn, confirmBtn.font, confrimText)
             confirmBtn.maximumSize = Dimension(stringWidth, 38)
         } catch (t: Throwable) {
             Log.e("getFont width error", t)

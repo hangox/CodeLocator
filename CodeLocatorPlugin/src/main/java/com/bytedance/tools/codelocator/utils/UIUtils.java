@@ -181,4 +181,9 @@ public class UIUtils {
         }
         return sourceStr.substring(0, index) + " ...";
     }
+
+    public static int getStringWidth(Component component, Font font, String content) {
+        FontMetrics metrics = component.getFontMetrics(font);
+        return metrics.stringWidth(content);
+    }
 }

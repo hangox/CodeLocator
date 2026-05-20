@@ -32,6 +32,8 @@ boolean useSourceCode = false
 
 repositories {
     maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
+    mavenCentral()
+    google()
     intellijPlatform {
         defaultRepositories()
     }
@@ -74,16 +76,18 @@ intellijPlatform {
 
 
 dependencies {
+    implementation "com.google.code.gson:gson:2.9.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation "com.squareup.okhttp3:okhttp:3.8.1"
+    implementation "com.squareup.okhttp3:okhttp:3.14.9"
+    implementation "com.hankcs:hanlp:portable-1.8.6"
     implementation "javazoom:jlayer:1.0.1"
     if (useSourceCode) {
         implementation project(':CodeLocatorModel')
     } else {
         implementation "com.bytedance.tools.codelocator:codelocator-model:2.0.4"
     }
-    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
-    implementation "com.google.zxing:core:3.5.0"
+    implementation "io.reactivex.rxjava3:rxjava:3.1.7"
+    implementation "com.google.zxing:core:3.5.2"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     intellijPlatform {

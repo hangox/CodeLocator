@@ -1,9 +1,16 @@
 package com.bytedance.tools.codelocator.dialog
 
 import com.bytedance.tools.codelocator.listener.OnClickListener
-import com.bytedance.tools.codelocator.panels.CodeLocatorWindow
 import com.bytedance.tools.codelocator.model.ShowInfo
-import com.bytedance.tools.codelocator.utils.*
+import com.bytedance.tools.codelocator.panels.CodeLocatorWindow
+import com.bytedance.tools.codelocator.utils.CoordinateUtils
+import com.bytedance.tools.codelocator.utils.IdeaUtils
+import com.bytedance.tools.codelocator.utils.JComponentUtils
+import com.bytedance.tools.codelocator.utils.Log
+import com.bytedance.tools.codelocator.utils.Mob
+import com.bytedance.tools.codelocator.utils.OSHelper
+import com.bytedance.tools.codelocator.utils.ResUtils
+import com.bytedance.tools.codelocator.utils.UIUtils
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.ex.WindowManagerEx
@@ -99,12 +106,11 @@ class ShowTraceDialog(
         val buttonWidth = DIALOG_WIDTH - CoordinateUtils.DEFAULT_BORDER * 4
         val jButton = JButton()
         jButton.font = Font(jButton.font.name, Font.PLAIN, 12)
-        val fontMetrics = jButton.getFontMetrics(jButton.font)
         var keyWorkInfo = ""
         if (showInfo.keyword != "null") {
             keyWorkInfo = "<br>&nbsp;" + UIUtils.getMatchWidthStr(
                 ResUtils.getString("pop_content") + " ${showInfo.keyword}",
-                fontMetrics,
+                jButton.getFontMetrics(jButton.font),
                 buttonWidth - 140
             )
         }

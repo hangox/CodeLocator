@@ -1,10 +1,16 @@
 package com.bytedance.tools.codelocator.dialog
 
-import com.bytedance.tools.codelocator.action.ShowGrabHistoryAction
 import com.bytedance.tools.codelocator.listener.OnClickListener
 import com.bytedance.tools.codelocator.model.CodeLocatorInfo
 import com.bytedance.tools.codelocator.panels.CodeLocatorWindow
-import com.bytedance.tools.codelocator.utils.*
+import com.bytedance.tools.codelocator.utils.CoordinateUtils
+import com.bytedance.tools.codelocator.utils.FileUtils
+import com.bytedance.tools.codelocator.utils.JComponentUtils
+import com.bytedance.tools.codelocator.utils.Log
+import com.bytedance.tools.codelocator.utils.Mob
+import com.bytedance.tools.codelocator.utils.ResUtils
+import com.bytedance.tools.codelocator.utils.ThreadUtils
+import com.bytedance.tools.codelocator.utils.UIUtils
 import com.bytedance.tools.codelocator.views.MyImageIcon
 import com.intellij.codeInsight.hint.HintManager
 import com.intellij.codeInsight.hint.HintManagerImpl
@@ -16,13 +22,19 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.awt.Dimension
 import java.awt.Font
-import java.awt.Image
 import java.awt.Point
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.File
 import java.util.concurrent.TimeUnit
-import javax.swing.*
+import javax.swing.BorderFactory
+import javax.swing.Box
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JDialog
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
 class ShowHistoryDialog(
@@ -106,7 +118,6 @@ class ShowHistoryDialog(
         val buttonWidth = DIALOG_WIDTH - CoordinateUtils.DEFAULT_BORDER * 4
         val jButton = JButton()
         jButton.font = Font(jButton.font.name, Font.PLAIN, 12)
-        val fontMetrics = jButton.getFontMetrics(jButton.font)
 
         var grabTime = ""
         try {
@@ -117,7 +128,7 @@ class ShowHistoryDialog(
         val showInfoText =
             "&nbsp;" + UIUtils.getMatchWidthStr(
                 ResUtils.getString("grab_title_format", "$grabTime"),
-                fontMetrics,
+                jButton.getFontMetrics(jButton.font),
                 buttonWidth - 140
             )
 

@@ -1,20 +1,39 @@
 package com.bytedance.tools.codelocator.dialog
 
+import com.bytedance.tools.codelocator.device.Device
 import com.bytedance.tools.codelocator.device.DeviceManager
-import com.bytedance.tools.codelocator.exception.ExecuteException
 import com.bytedance.tools.codelocator.device.action.AdbCommand
 import com.bytedance.tools.codelocator.device.action.BroadcastAction
-import com.bytedance.tools.codelocator.device.Device
+import com.bytedance.tools.codelocator.exception.ExecuteException
 import com.bytedance.tools.codelocator.panels.CodeLocatorWindow
-import com.bytedance.tools.codelocator.utils.*
 import com.bytedance.tools.codelocator.response.StringResponse
-import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.*
+import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.ACTION_PROCESS_CONFIG_LIST
+import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.KEY_ACTION_ADD
+import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.KEY_CODELOCATOR_ACTION
+import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.KEY_CONFIG_TYPE
+import com.bytedance.tools.codelocator.utils.CodeLocatorConstants.KEY_DATA
+import com.bytedance.tools.codelocator.utils.CoordinateUtils
+import com.bytedance.tools.codelocator.utils.JComponentUtils
+import com.bytedance.tools.codelocator.utils.Log
+import com.bytedance.tools.codelocator.utils.Mob
+import com.bytedance.tools.codelocator.utils.NotificationUtils
+import com.bytedance.tools.codelocator.utils.ResUtils
+import com.bytedance.tools.codelocator.utils.StringUtils
+import com.bytedance.tools.codelocator.utils.ThreadUtils
+import com.bytedance.tools.codelocator.utils.UIUtils
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.SystemInfo
 import java.awt.Dimension
-import javax.swing.*
+import javax.swing.Action
+import javax.swing.BorderFactory
+import javax.swing.Box
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JPanel
 
 class FixJumpErrorDialog(
     val codeLocatorWindow: CodeLocatorWindow,
@@ -140,7 +159,7 @@ class FixJumpErrorDialog(
             close(0)
         }
         try {
-            val stringWidth = confirmBtn.getFontMetrics(confirmBtn.font).stringWidth(confrimText) + 10
+            val stringWidth = UIUtils.getStringWidth(confirmBtn, confirmBtn.font, confrimText) + 10
             confirmBtn.maximumSize = Dimension(stringWidth, 40)
             cancelBtn.maximumSize = Dimension(stringWidth, 40)
         } catch (t: Throwable) {

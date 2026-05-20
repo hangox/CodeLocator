@@ -52,14 +52,16 @@
 
     <depends>org.jetbrains.android</depends>
 
+    <projectListeners>
+        <listener class="com.bytedance.tools.codelocator.listener.CodeLocatorProjectManagerListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
+
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK1="true" supportsK2="true" />
         <supportsKotlinK2Mode/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-
-        <checkinHandlerFactory implementation="com.bytedance.tools.codelocator.importopt.DeleteImportinHandlerFactory"/>
 
         <defaultProjectTypeProvider type="Android"/>
 

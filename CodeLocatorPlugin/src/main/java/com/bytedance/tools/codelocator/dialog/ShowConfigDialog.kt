@@ -1,6 +1,15 @@
 package com.bytedance.tools.codelocator.dialog
 
-import com.bytedance.tools.codelocator.utils.*
+import com.bytedance.tools.codelocator.utils.AutoUpdateUtils
+import com.bytedance.tools.codelocator.utils.CoordinateUtils
+import com.bytedance.tools.codelocator.utils.FileUtils
+import com.bytedance.tools.codelocator.utils.IdeaUtils
+import com.bytedance.tools.codelocator.utils.Log
+import com.bytedance.tools.codelocator.utils.Mob
+import com.bytedance.tools.codelocator.utils.OSHelper
+import com.bytedance.tools.codelocator.utils.ResUtils
+import com.bytedance.tools.codelocator.utils.ThreadUtils
+import com.bytedance.tools.codelocator.utils.UIUtils
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ex.WindowManagerEx
 import java.awt.Dimension
@@ -141,7 +150,7 @@ class ShowConfigDialog(
                 hide()
             }
             try {
-                val stringWidth = confirmButton!!.getFontMetrics(confirmButton!!.font).stringWidth(btnText)
+                val stringWidth = UIUtils.getStringWidth(confirmButton, confirmButton!!.font, btnText)
                 confirmButton!!.maximumSize = Dimension(stringWidth, 38)
             } catch (t: Throwable) {
                 Log.e("getfont width error", t)
@@ -158,7 +167,7 @@ class ShowConfigDialog(
             hide()
         }
         try {
-            val stringWidth = dontShowButton.getFontMetrics(dontShowButton.font).stringWidth(dontShowText)
+            val stringWidth = UIUtils.getStringWidth(dontShowButton, dontShowButton.font, dontShowText)
             dontShowButton.maximumSize = Dimension(stringWidth, 38)
         } catch (t: Throwable) {
             Log.e("getFont width error", t)
