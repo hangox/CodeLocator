@@ -28,7 +28,9 @@ def myUntilBuild = "263.*"
 version = myVersion
 
 
-boolean useSourceCode = false
+boolean useSourceCode = providers.gradleProperty("useSourceCode")
+    .map { it.toBoolean() }
+    .getOrElse(false)
 
 repositories {
     maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
