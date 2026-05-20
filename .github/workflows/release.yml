@@ -2,8 +2,8 @@ name: Build and Release Plugin
 
 on:
   push:
-    branches: [ main ]
-    tags: [ 'v*' ]
+    branches: [ private-release ]
+    tags: [ 'v*', 'beta*' ]
   workflow_dispatch:
 
 jobs:
@@ -41,21 +41,37 @@ jobs:
       working-directory: CodeLocatorPlugin
       run: |
         VERSION=$(grep "def myVersion" build.gradle | sed "s/.*'\(.*\)'.*/\1/")
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         echo "Plugin version: $VERSION"
+
+    - name: Resolve release channel
+      id: release_channel
+      run: |
+        CHANNEL="stable"
+        PRERELEASE="false"
+
+        if [[ "${GITHUB_REF_TYPE}" == "tag" && "${GITHUB_REF_NAME}" == *"beta"* ]]; then
+          CHANNEL="beta"
+          PRERELEASE="true"
+        fi
+
+        echo "channel=${CHANNEL}" >> "$GITHUB_OUTPUT"
+        echo "prerelease=${PRERELEASE}" >> "$GITHUB_OUTPUT"
+        echo "Release channel: ${CHANNEL}"
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: plugin-build-${{ steps.plugin_version.outputs.version }}
+        name: plugin-build-${{ steps.plugin_version.outputs.version }}-${{ steps.release_channel.outputs.channel }}
         path: CodeLocatorPlugin/build/distributions/*.zip
 
     - name: Upload to Private Plugin Registry
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/')
       env:
         REGISTRY_URL: ${{ secrets.PLUGIN_REGISTRY_URL }}
         REGISTRY_TOKEN: ${{ secrets.PLUGIN_REGISTRY_TOKEN }}
         VERSION: ${{ steps.plugin_version.outputs.version }}
+        CHANNEL: ${{ steps.release_channel.outputs.channel }}
       run: |
         ZIP_FILE="CodeLocatorPlugin/build/distributions/CodeLocatorPlugin-${VERSION}.zip"
 
@@ -64,9 +80,9 @@ jobs:
           exit 1
         fi
 
-        echo "Uploading plugin ${VERSION} to private registry..."
+        echo "Uploading plugin ${VERSION} to private registry channel ${CHANNEL}..."
         RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST \
-          "${REGISTRY_URL}/api/plugins?force=true" \
+          "${REGISTRY_URL}/api/plugins?channel=${CHANNEL}&force=true" \
           -H "Authorization: Bearer ${REGISTRY_TOKEN}" \
           -F "file=@${ZIP_FILE}" \
           --max-time 600 --retry 3 --retry-all-errors)
@@ -82,19 +98,20 @@ jobs:
           exit 1
         fi
 
-        echo "Successfully uploaded plugin ${VERSION} to private registry"
+        echo "Successfully uploaded plugin ${VERSION} to private registry channel ${CHANNEL}"
 
     - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: CodeLocator Plugin v${{ steps.plugin_version.outputs.version }}
+        name: CodeLocator Plugin ${{ github.ref_name }}
         body: |
           ## CodeLocator Plugin Release
 
           ### Version: ${{ steps.plugin_version.outputs.version }}
+          ### Channel: ${{ steps.release_channel.outputs.channel }}
 
           **Changes in this release:**
           - Auto-built from commit: ${{ github.sha }}
@@ -112,4 +129,4 @@ jobs:
         files: |
           CodeLocatorPlugin/build/distributions/*.zip
         draft: false
-        prerelease: false
+        prerelease: ${{ steps.release_channel.outputs.prerelease }}
