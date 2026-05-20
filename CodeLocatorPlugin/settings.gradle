@@ -3,7 +3,13 @@ rootProject.name = 'CodeLocatorPlugin'
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
-        maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
+        maven {
+            url "https://nexus.cc-mobile.cn/repository/maven-public"
+            content {
+                excludeGroup("localIde")
+                excludeGroup("com.google.android.studio")
+            }
+        }
         mavenCentral()
         google()
     }
