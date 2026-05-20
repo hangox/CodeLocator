@@ -31,14 +31,13 @@ version = myVersion
 boolean useSourceCode = providers.gradleProperty("useSourceCode")
     .map { it.toBoolean() }
     .getOrElse(false)
+boolean skipPrivateNexus = providers.gradleProperty("skipPrivateNexus")
+    .map { it.toBoolean() }
+    .getOrElse(false)
 
 repositories {
-    maven {
-        url "https://nexus.cc-mobile.cn/repository/maven-public"
-        content {
-            excludeGroup("localIde")
-            excludeGroup("com.google.android.studio")
-        }
+    if (!skipPrivateNexus) {
+        maven { url "https://nexus.cc-mobile.cn/repository/maven-public" }
     }
     mavenCentral()
     google()

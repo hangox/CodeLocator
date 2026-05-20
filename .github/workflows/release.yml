@@ -54,7 +54,7 @@ jobs:
         tar -xzf "/tmp/${ARCHIVE}" -C "${ANDROID_STUDIO_DIR}" --strip-components=1
 
     - name: Build plugin
-      run: cd CodeLocatorPlugin && ../gradlew buildPlugin -x instrumentCode -PlocalIdeOverride="${ANDROID_STUDIO_DIR}" -PuseSourceCode=true
+      run: cd CodeLocatorPlugin && ../gradlew buildPlugin -x instrumentCode -PlocalIdeOverride="${ANDROID_STUDIO_DIR}" -PuseSourceCode=true -PskipPrivateNexus=true
 
     - name: Get plugin version
       id: plugin_version
