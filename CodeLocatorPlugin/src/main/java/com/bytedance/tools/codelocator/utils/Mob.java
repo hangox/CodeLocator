@@ -118,6 +118,8 @@ public class Mob {
 
         String COPY_GRAB_FILE_PATH = "copy_grab_file_path";
 
+        String COPY_VIEW_LINK = "copy_view_link";
+
         String LOAD_FILE = "load_file";
 
         String LOAD_APP_FILE = "load_app_file";

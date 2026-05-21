@@ -57,6 +57,15 @@ class ShowGrabHistoryAction(
         }
 
         @JvmStatic
+        fun ensureCodeLocatorHistoryFile(codeLocatorInfo: CodeLocatorInfo?): File? {
+            val historyFile = getCodeLocatorHistoryFile(codeLocatorInfo) ?: return null
+            if (historyFile.exists()) {
+                return historyFile
+            }
+            return saveCodeLocatorHistory(codeLocatorInfo)?.takeIf { it.exists() }
+        }
+
+        @JvmStatic
         fun saveCodeLocatorHistory(codeLocatorInfo: CodeLocatorInfo?): File? {
             codeLocatorInfo ?: return null
             val codelocatorBytes = codeLocatorInfo.toBytes()

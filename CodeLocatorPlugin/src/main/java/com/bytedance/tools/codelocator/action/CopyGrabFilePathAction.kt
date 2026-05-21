@@ -26,10 +26,7 @@ class CopyGrabFilePathAction(
         val application = codeLocatorWindow.currentApplication ?: return
         val screenCapImage = codeLocatorWindow.getScreenPanel()?.screenCapImage ?: return
         val codeLocatorInfo = CodeLocatorInfo(application, screenCapImage)
-        val historyFile = ShowGrabHistoryAction.getCodeLocatorHistoryFile(codeLocatorInfo) ?: return
-        if (!historyFile.exists()) {
-            ShowGrabHistoryAction.saveCodeLocatorHistory(codeLocatorInfo)
-        }
+        val historyFile = ShowGrabHistoryAction.ensureCodeLocatorHistoryFile(codeLocatorInfo) ?: return
         ClipboardUtils.copyContentToClipboard(project, historyFile.absolutePath)
         Mob.mob(Mob.Action.CLICK, Mob.Button.COPY_GRAB_FILE_PATH)
     }

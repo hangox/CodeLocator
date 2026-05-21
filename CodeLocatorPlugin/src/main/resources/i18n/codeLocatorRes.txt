@@ -254,6 +254,7 @@ save=保存
 save_failed_tip=保存失败, %s
 save_file_tip=文件已保存到 %s
 copy_grab_file_path=复制当前抓取文件路径
+copy_view_link=复制 View 链接
 save_grab_info=保存抓取信息
 save_to_local=保存到本地
 schema_empty=发送的Schema不能为空

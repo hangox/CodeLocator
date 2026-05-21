@@ -797,6 +797,9 @@ class CodeLocatorWindow(
     fun showPop(component: Component, x: Int, y: Int, inTree: Boolean) {
         val hasAndroidDevice = DeviceManager.hasAndroidDevice()
         val actionGroup = DefaultActionGroup("listGroup", true)
+        if (currentSelectView != null) {
+            actionGroup.add(CopyViewLinkAction(project, this))
+        }
         if (!isWindowMode && editViewAction?.enable == true) {
             actionGroup.add(editViewAction!!)
         }
