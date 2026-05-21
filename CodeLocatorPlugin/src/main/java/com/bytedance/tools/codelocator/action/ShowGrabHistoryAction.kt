@@ -48,13 +48,22 @@ class ShowGrabHistoryAction(
         val sSimpleDateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")
 
         @JvmStatic
-        fun saveCodeLocatorHistory(codeLocatorInfo: CodeLocatorInfo?) {
-            codeLocatorInfo ?: return
+        fun getCodeLocatorHistoryFile(codeLocatorInfo: CodeLocatorInfo?): File? {
+            codeLocatorInfo ?: return null
+            return File(
+                FileUtils.sCodelocatorHistoryFileDirPath,
+                codeLocatorInfo.wApplication.packageName + sSimpleDateFormat.format(Date(codeLocatorInfo.wApplication.grabTime)) + FileUtils.CODE_LOCATOR_FILE_SUFFIX
+            )
+        }
+
+        @JvmStatic
+        fun saveCodeLocatorHistory(codeLocatorInfo: CodeLocatorInfo?): File? {
+            codeLocatorInfo ?: return null
             val codelocatorBytes = codeLocatorInfo.toBytes()
-            if (codelocatorBytes?.isEmpty() == true) {
-                return
+            if (codelocatorBytes?.isNotEmpty() != true) {
+                return null
             }
-            val listFiles = File(FileUtils.sCodelocatorHistoryFileDirPath).listFiles() ?: return
+            val listFiles = File(FileUtils.sCodelocatorHistoryFileDirPath).listFiles() ?: return null
             listFiles.sortByDescending { it.lastModified() }
             val maxHistoryCount = FileUtils.getConfig().maxHistoryCount
             if (listFiles.size > FileUtils.getConfig().maxHistoryCount) {
@@ -63,13 +72,9 @@ class ShowGrabHistoryAction(
                     listFiles[i].delete()
                 }
             }
-            val file =
-                File(
-                    FileUtils.sCodelocatorHistoryFileDirPath,
-                    codeLocatorInfo.wApplication.packageName + sSimpleDateFormat.format(Date(codeLocatorInfo.wApplication.grabTime)) + FileUtils.CODE_LOCATOR_FILE_SUFFIX
-                )
+            val file = getCodeLocatorHistoryFile(codeLocatorInfo) ?: return null
             FileUtils.saveContentToFile(file, codelocatorBytes)
+            return file
         }
     }
 }
-

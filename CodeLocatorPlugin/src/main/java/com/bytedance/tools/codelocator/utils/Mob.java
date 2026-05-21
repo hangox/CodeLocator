@@ -116,6 +116,8 @@ public class Mob {
 
         String SAVE_WINDOW = "save_window";
 
+        String COPY_GRAB_FILE_PATH = "copy_grab_file_path";
+
         String LOAD_FILE = "load_file";
 
         String LOAD_APP_FILE = "load_app_file";

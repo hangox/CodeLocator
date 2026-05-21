@@ -164,6 +164,7 @@ class CodeLocatorWindow(
     var traceShowAction: TraceShowAction? = null
     var newWindowAction: NewWindowAction? = null
     var saveWindowAction: SaveWindowAction? = null
+    var copyGrabFilePathAction: CopyGrabFilePathAction? = null
     var loadWindowAction: LoadWindowAction? = null
     var settingsAction: SettingsAction? = null
 
@@ -466,6 +467,9 @@ class CodeLocatorWindow(
             grabViewWithStopAnimAction = GrabViewWithStopAnimAction(project, this)
             addActionToGroup(actionGroup, grabViewWithStopAnimAction)
         }
+
+        copyGrabFilePathAction = CopyGrabFilePathAction(project, this)
+        addActionToGroup(actionGroup, copyGrabFilePathAction)
 
         if (!isWindowMode) {
             loadWindowAction = LoadWindowAction(project, this)
