@@ -63,6 +63,14 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <fileType
+                name="CodeLocator"
+                implementationClass="com.bytedance.tools.codelocator.fileeditor.CodeLocatorFileType"
+                fieldName="INSTANCE"
+                extensions="codeLocator"/>
+
+        <fileEditorProvider implementation="com.bytedance.tools.codelocator.fileeditor.CodeLocatorFileEditorProvider"/>
+
         <defaultProjectTypeProvider type="Android"/>
 
         <postStartupActivity implementation="com.bytedance.tools.codelocator.listener.CodeLocatorStartupActivity"/>
