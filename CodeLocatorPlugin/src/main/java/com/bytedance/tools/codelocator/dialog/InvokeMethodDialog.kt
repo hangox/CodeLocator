@@ -396,6 +396,6 @@ class InvokeMethodDialog(
     override fun onMetaKeyDown(component: JBList<String>, keyCode: Int) {
     }
 
-    override fun onFliterKeyDown(component: JBList<String>, keyCode: Int) {
+    override fun onFilterKeyDown(component: JBList<String>, keyCode: Int) {
     }
 }

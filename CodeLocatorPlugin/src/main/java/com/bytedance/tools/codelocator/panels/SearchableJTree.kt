@@ -31,7 +31,10 @@ interface SearchableComponent {
 
         const val MODE_SHIFT = 3
 
-        const val MODE_CUSTOM_FLITER = 4
+        const val MODE_CUSTOM_FILTER = 4
+
+        @Deprecated("Use MODE_CUSTOM_FILTER instead", ReplaceWith("MODE_CUSTOM_FILTER"))
+        const val MODE_CUSTOM_FLITER = MODE_CUSTOM_FILTER
 
         const val SEARCH_AUTO_DIS_TIME = 20000L
     }
@@ -132,7 +135,7 @@ class SearchableJTree(newModel: TreeModel) : JTree(newModel), SearchableComponen
                     keydownInClickMode(e)
                 } else if (currentMode == SearchableComponent.MODE_SHIFT) {
                     keydownInShiftMode(e)
-                } else if (currentMode == SearchableComponent.MODE_CUSTOM_FLITER) {
+                } else if (currentMode == SearchableComponent.MODE_CUSTOM_FILTER) {
                     keydownInFilterMode(e)
                 } else {
                     keydownInSearchMode(e)
@@ -152,7 +155,7 @@ class SearchableJTree(newModel: TreeModel) : JTree(newModel), SearchableComponen
             }
 
             private fun keydownInFilterMode(e: KeyEvent) {
-                onEventListener?.onFliterKeyDown(this@SearchableJTree, e.keyCode)
+                onEventListener?.onFilterKeyDown(this@SearchableJTree, e.keyCode)
             }
 
             private fun keydownInSearchMode(e: KeyEvent) {
@@ -297,7 +300,7 @@ class SearchableJTree(newModel: TreeModel) : JTree(newModel), SearchableComponen
             g.fillRect(scrollX + visibleRect.width - stringWidth - 12, scrollY, stringWidth + 12, fontMetrics.height + 8)
             g.setColor(Color.WHITE)
             g.drawString(drawStr, scrollX + 6 + visibleRect.width - stringWidth - 12, scrollY + (8 / 2) + fontMetrics.getAscent())
-        } else if (currentMode == SearchableComponent.MODE_CUSTOM_FLITER) {
+        } else if (currentMode == SearchableComponent.MODE_CUSTOM_FILTER) {
             val drawStr = getModeTip(ResUtils.getString("show_fit_view"), mTotalCount, mCurrentSelectIndex)
             val stringWidth = fontMetrics.stringWidth(drawStr)
             g.fillRect(scrollX + visibleRect.width - stringWidth - 12, scrollY, stringWidth + 12, fontMetrics.height + 8)
@@ -343,6 +346,11 @@ interface OnEventListener<E : JComponent> {
 
     fun onMetaKeyDown(component: E, keyCode: Int)
 
-    fun onFliterKeyDown(component: E, keyCode: Int)
+    fun onFilterKeyDown(component: E, keyCode: Int)
+
+    @Deprecated("Use onFilterKeyDown instead", ReplaceWith("onFilterKeyDown(component, keyCode)"))
+    fun onFliterKeyDown(component: E, keyCode: Int) {
+        onFilterKeyDown(component, keyCode)
+    }
 
 }

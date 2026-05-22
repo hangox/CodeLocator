@@ -424,7 +424,7 @@ class ShowDisplayDependenciesDialog(
     override fun onShiftKeyDown(jTree: JTree, keyCode: Int) {
     }
 
-    override fun onFliterKeyDown(component: JTree, keyCode: Int) {
+    override fun onFilterKeyDown(component: JTree, keyCode: Int) {
     }
 
     override fun onMetaKeyDown(jTree: JTree, keyCode: Int) {

@@ -133,7 +133,7 @@ class ViewTreePanel(val codeLocatorWindow: CodeLocatorWindow) : JPanel(), OnEven
                         return
                     }
                     currentViewList.addAll(clickViewList!!)
-                    if (currentMode == SearchableComponent.MODE_CUSTOM_FLITER) {
+                    if (currentMode == SearchableComponent.MODE_CUSTOM_FILTER) {
                         currentSelectViewIndex = 0
                         myTreeCellRenderer.setFilterViewList(clickViewList)
 
@@ -313,10 +313,10 @@ class ViewTreePanel(val codeLocatorWindow: CodeLocatorWindow) : JPanel(), OnEven
         }
     }
 
-    override fun onFliterKeyDown(component: JTree, keyCode: Int) {
+    override fun onFilterKeyDown(component: JTree, keyCode: Int) {
         if (mTreeRoot == null) return
         if (keyCode == KeyEvent.VK_ESCAPE) {
-            if (currentMode == SearchableComponent.MODE_CUSTOM_FLITER) {
+            if (currentMode == SearchableComponent.MODE_CUSTOM_FILTER) {
                 currentMode = SearchableComponent.MODE_NORMAL
                 currentViewList.clear()
                 currentSelectViewIndex = 0

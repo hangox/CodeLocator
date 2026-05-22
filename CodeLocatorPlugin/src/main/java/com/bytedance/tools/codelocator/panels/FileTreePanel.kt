@@ -373,6 +373,6 @@ class FileTreePanel(val codeLocatorWindow: CodeLocatorWindow) : JPanel(), OnEven
     override fun onMetaKeyDown(jTree: JTree, keyCode: Int) {
     }
 
-    override fun onFliterKeyDown(component: JTree, keyCode: Int) {
+    override fun onFilterKeyDown(component: JTree, keyCode: Int) {
     }
 }

@@ -504,10 +504,10 @@ public class ScreenPanel extends JPanel implements ImageObserver {
 
     public void setCustomViews(List<WView> customViews) {
         mCurrentViewList.clear();
-        mCurrentMode = SearchableJTree.MODE_CUSTOM_FLITER;
+        mCurrentMode = SearchableJTree.MODE_CUSTOM_FILTER;
         mCurrentViewList.addAll(customViews);
         if (mOnGetViewListListener != null) {
-            mOnGetViewListListener.onGetViewList(SearchableJTree.MODE_CUSTOM_FLITER, mCurrentViewList);
+            mOnGetViewListListener.onGetViewList(SearchableJTree.MODE_CUSTOM_FILTER, mCurrentViewList);
         }
     }
 
@@ -692,7 +692,7 @@ public class ScreenPanel extends JPanel implements ImageObserver {
         switch (mode) {
             case SearchableJTree.MODE_SHIFT:
                 return Mob.Button.VIEW_TREE_SHIFT;
-            case SearchableJTree.MODE_CUSTOM_FLITER:
+            case SearchableJTree.MODE_CUSTOM_FILTER:
                 return Mob.Button.VIEW_TREE_FILTER;
             case SearchableJTree.MODE_CONTROL:
                 return Mob.Button.VIEW_TREE_CONTROL;
@@ -1884,9 +1884,9 @@ public class ScreenPanel extends JPanel implements ImageObserver {
             return;
         }
         mCurrentViewList.addAll(filterViewList);
-        mCurrentMode = SearchableJTree.MODE_CUSTOM_FLITER;
+        mCurrentMode = SearchableJTree.MODE_CUSTOM_FILTER;
         if (mOnGetViewListListener != null) {
-            mOnGetViewListListener.onGetViewList(SearchableJTree.MODE_CUSTOM_FLITER, mCurrentViewList);
+            mOnGetViewListListener.onGetViewList(SearchableJTree.MODE_CUSTOM_FILTER, mCurrentViewList);
         }
     }
 
