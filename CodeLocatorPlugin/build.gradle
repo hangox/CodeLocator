@@ -21,7 +21,7 @@ compileTestKotlin {
 }
 
 def myGroup = 'com.bytedance.tools'
-def myVersion = '2.0.9'
+def myVersion = '2.0.8'
 def mySinceBuild = "232"
 def myUntilBuild = "263.*"
 
