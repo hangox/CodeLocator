@@ -35,8 +35,9 @@ CodeLocator 是 Android 调试工具（IDE 插件 + 设备端 SDK）。本 skill
 | `grab` | 抓当前前台 App 的 View 树 + 截图，落盘到历史目录 | `--device <serial>`、`--package <pkg>`、`--output-dir <dir>`、`--no-foreground-check`（跳过前台校验）、`--need-color`、`--pretty` |
 | `schema` | 发 deep link：先 `am start -d` 试，失败回落 `ACTION_PROCESS_SCHEMA` 广播 | 位置参数 `<url>` 或 `--schema '<uri>'`、`--device <s>` / `-s`、`--no-fallback`、`--save-to-file` |
 | `find-click` | 拿最近一次真实触摸命中的 view chain memAddr；可联动 `.codeLocator` 反查 className/idStr/bounds | `--serial <s>` / `--device <s>`（别名）、`--codelocator <file>` 或自动取 mtime 最新、`--pretty` |
+| `view-image` | 渲染指定 View 的截图/绘制内容/前景/背景 Bitmap，pull 到本地 PNG | `--mem <memAddr>`（必需）、`--type screenshot\|all\|foreground\|background`（必需）、`--device <s>`、`--output <path.png>`、`--pretty` |
 
-> ⚠ 参数别名差异：`grab` 用 `--device`，`find-click` 接受 `--serial` 或 `--device`，`schema` 接受 `--device` 或 `-s`。**无脑用 `--device` 三个子命令都正确**。
+> ⚠ 参数别名差异：`grab` 用 `--device`，`find-click` 接受 `--serial` 或 `--device`，`schema` 接受 `--device` 或 `-s`，`view-image` 接受 `--device` / `--serial` / `-s`。**无脑用 `--device` 所有子命令都正确**。
 
 所有命令的 stdout 都是 JSON。成功 `{ status: "ok", ... }`，失败 `{ status: "error", error: { code, message, ... } }`——**按 code 排查，不要硬试**。
 
@@ -66,6 +67,28 @@ node ~/.claude/skills/codelocator/scripts/cli.ts schema --schema 'snssdk1128://f
 ```
 
 先 `am start -d`；失败时（路由不命中等）自动回落 `ACTION_PROCESS_SCHEMA` 广播。`--no-fallback` 仅试 am start。
+
+### view-image 工作流
+
+```bash
+# 1. 先 grab 一帧拿到 memAddr
+node ~/.claude/skills/codelocator/scripts/cli.ts grab --pretty
+# 2. 解析拿到目标 View 的 memAddr（从 normalized.json 的 flatViews[].memAddr）
+node ~/.claude/skills/codelocator/scripts/cli.ts parse <historyFile> <out-dir>
+# 3. 渲染 View 截图/绘制内容/前景/背景
+node ~/.claude/skills/codelocator/scripts/cli.ts view-image --mem 04211def --type screenshot --pretty
+node ~/.claude/skills/codelocator/scripts/cli.ts view-image --mem 04211def --type all --output ./view-all.png
+node ~/.claude/skills/codelocator/scripts/cli.ts view-image --mem 04211def --type foreground
+node ~/.claude/skills/codelocator/scripts/cli.ts view-image --mem 04211def --type background
+```
+
+4 种 type 对应 IDE 插件右键菜单「查看View绘制内容」子菜单：
+- `screenshot`：复制当前View截图
+- `all`：View绘制内容（全部层）
+- `foreground`：View绘制前景
+- `background`：View绘制背景
+
+前置条件：App 必须集成 CodeLocator SDK 且在前台；memAddr 来自近期 grab 的 `.codeLocator` 文件。
 
 ## 列出历史抓取
 
@@ -172,6 +195,8 @@ Selector 格式 `key=value`，多条件用 `,` 连接（AND）：
 | "抓一帧 / 抓一下当前界面" | `cli.ts grab --pretty` | stdout 拿 `historyFile` 后走「解析」 |
 | "发个 schema 跳一下：xxx://yyy" | `cli.ts schema --schema '<uri>'` | 失败自动回落广播 |
 | "我刚才点的 view 是什么" | 让用户先点屏，再 `cli.ts find-click --pretty` | 反查需要近期 `.codeLocator`（自动取或 `--codelocator <file>`） |
+| "看看这个 View 长什么样 / 截个图" | 先 `grab` 拿 memAddr，再 `cli.ts view-image --mem <addr> --type screenshot` | 输出本地 PNG 文件路径 |
+| "View 的背景是什么 / 前景画了啥" | `cli.ts view-image --mem <addr> --type background` 或 `foreground` | 需要 SDK 在前台 + 有效 memAddr |
 
 ## 限制
 

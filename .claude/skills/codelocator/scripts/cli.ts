@@ -35,6 +35,7 @@ const ROUTES: Record<string, string> = {
   grab: "grab.ts",
   schema: "schema.ts",
   "find-click": "find-click.ts",
+  "view-image": "view-image.ts",
 };
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,7 @@ function topHelp(): string {
   grab               抓取当前前台 App 的布局 + 截图，落盘为 .codeLocator
   schema             通过 SDK 触发 schema / 路由跳转
   find-click         根据坐标定位 View，可选触发 mock click
+  view-image         渲染指定 View 的截图 / 内容 / 前景 / 背景 PNG
 
 Run \`node cli.ts <command> --help\` 查看子命令参数。
 `;
